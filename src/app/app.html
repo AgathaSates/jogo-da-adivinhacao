@@ -1,43 +1,64 @@
 <div class="d-flex flex-column justify-content-center align-items-center h-100">
   <h1 class="mb-3">Jogo de Adivinhação</h1>
 
-  <div class="d-flex flex-wrap gap-2 mb-3">
-    <span class="badge text-bg-warning px-3 py-2 fs-4">
-      Chances: <strong>{{ chances }}</strong>
-    </span>
-    <span class="badge text-bg-info px-3 py-2 fs-4">
-      Placar: <strong>{{ placar }}</strong>
-    </span>
-  </div>
+  <section>
+    <h2>Ranking de partidas</h2>
 
-  @if (venceu) {
-    <div class="alert alert-success w-100 text-center" style="max-width: 640px" role="alert">
-      <strong>Você acertou!</strong> 🎉
+    <div class="d-flex flex-column bg-success-subtle rounded p-2 gap-2">
+      @for (dificuldade of dificuldadeJogada; track $index; let i = $index) {
+        <div class="d-flex align-items-baseline gap-3">
+          <span class="f-5"><strong>Dificuldade:</strong> {{ dificuldade }}</span>
+          <span class="f-5"><strong>Pontos:</strong> {{ ultimaPontuacao[i] ?? '—' }}</span>
+        </div>
+      } @empty {
+        <div class="text-muted">>> Nenhuma partida ainda... :(</div>
+      }
     </div>
-  } @else if (perdeu) {
-    <div class="alert alert-danger w-100 text-center" style="max-width: 640px" role="alert">
-      <strong>Você perdeu…</strong> Tente novamente!
+  </section>
+
+  <section class="mt-3">
+    <h2>Seleção de dificuldade</h2>
+
+    <div class="row justify-content-center gap-2 mt-4">
+      <button (click)="selecionarDificuldade('Fácil')" class="col-3 btn btn-primary">Fácil</button>
+      <button (click)="selecionarDificuldade('Médio')" class="col-3 btn btn-primary">Médio</button>
+      <button (click)="selecionarDificuldade('Dificil')" class="col-3 btn btn-primary">
+        Dificil
+      </button>
     </div>
-  }
+  </section>
 
   <main class="row-cols-3 d-flex align-items-center bg-warning-subtle rounded text-center p-5 mt-2">
     <label class="display-1"> {{ dicaNumeroMaiorQue }}> </label>
 
     <div class="d-flex flex-column gap-2">
       <input
+        [disabled]="!dificuldadeSelecionada || jogoEstaFinalizad"
         [(ngModel)]="numeroDigitado"
         class="display-1 text-center"
         type="number"
         min="1"
         max="100"
       />
-      @if (!jogoEstaFinalizad) {
-        <button (click)="adivinhar()" class="btn btn-primary">Adivinhar</button>
-      } @else {
-        <button (click)="reiniciar()" class="btn btn-success">Reiniciar</button>
-      }
+      <button
+        [disabled]="!dificuldadeSelecionada || jogoEstaFinalizad"
+        (click)="adivinhar()"
+        class="btn btn-primary"
+      >
+        Adivinhar
+      </button>
+      <button (click)="reiniciar()" class="btn btn-success">Reiniciar</button>
     </div>
 
     <label class="display-1"> <{{ dicaNumeroMenorQue }} </label>
   </main>
+
+  @if (dificuldadeSelecionada) {
+    <section class="d-flex justify-content-between gap-2 mt-2">
+      <label class="fs-5">
+        <span class="fw-semibold">Tentativas Restantes:</span> {{ tentativasRestantes }}
+      </label>
+      <label class="fs-5"> <span class="fw-semibold">Pontuação:</span> {{ pontuacao }} </label>
+    </section>
+  }
 </div>

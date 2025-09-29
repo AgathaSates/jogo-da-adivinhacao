@@ -14,49 +14,75 @@ export class App implements OnInit {
   public dicaNumeroMenorQue: number = 100;
 
   public jogoEstaFinalizad: boolean = false;
-  public venceu: boolean = false;
-  public perdeu: boolean = false;
-  public placar: number = 0;
-  public chances: number = 4;
 
-  ngOnInit(): void {
-    this.numeroSecret = this.ObterNumeroSecreto();
+  public dificuldadeSelecionada?: string;
+  public tentativasRestantes: number = 0;
+  public pontuacao: number = 100;
+
+  public ultimaPontuacao: number[] = [];
+  public dificuldadeJogada: string[] = [];
+
+  ngOnInit(): void {}
+
+  public selecionarDificuldade(dificuldade: string): void {
+    switch (dificuldade) {
+      case 'Fácil':
+        this.numeroSecret = this.ObterNumeroSecreto(10);
+        this.dicaNumeroMenorQue = 10;
+        this.tentativasRestantes = 3;
+        break;
+
+      case 'Médio':
+        this.numeroSecret = this.ObterNumeroSecreto(50);
+        this.dicaNumeroMenorQue = 50;
+        this.tentativasRestantes = 6;
+        break;
+
+      case 'Dificil':
+        this.numeroSecret = this.ObterNumeroSecreto(100);
+        this.dicaNumeroMenorQue = 100;
+        this.tentativasRestantes = 7;
+        break;
+    }
+
+    this.dificuldadeJogada.push(dificuldade);
+    this.dificuldadeSelecionada = dificuldade;
   }
 
   public adivinhar() {
-    if (this.chances == 1 && this.numeroDigitado !== this.numeroSecret) {
+    this.tentativasRestantes--;
+    if (this.tentativasRestantes <= 0) {
       this.jogoEstaFinalizad = true;
-      this.venceu = false;
-      this.perdeu = true;
-      this.chances = 4;
-    } else if (this.numeroDigitado > this.numeroSecret) {
+      return;
+    }
+
+    if (this.numeroDigitado > this.numeroSecret) {
       this.dicaNumeroMenorQue = this.numeroDigitado;
-      this.chances -= 1;
     } else if (this.numeroDigitado < this.numeroSecret) {
       this.dicaNumeroMaiorQue = this.numeroDigitado;
-      this.chances -= 1;
     } else {
       this.jogoEstaFinalizad = true;
-      this.venceu = true;
-      this.perdeu = false;
-      this.placar += 1;
-      this.chances = 4;
     }
+
+    const diferencaNumerica: number = Math.abs(this.numeroSecret - this.numeroDigitado);
+
+    if (diferencaNumerica >= 10) this.pontuacao -= 10;
+    else if (diferencaNumerica >= 5) this.pontuacao -= 5;
+    else this.pontuacao -= 2;
   }
 
   public reiniciar() {
     this.jogoEstaFinalizad = false;
-    this.venceu = false;
-    this.perdeu = false;
     this.numeroDigitado = 1;
     this.dicaNumeroMaiorQue = 1;
     this.dicaNumeroMenorQue = 100;
-
-    this.numeroSecret = this.ObterNumeroSecreto();
+    this.dificuldadeSelecionada = undefined;
+    this.ultimaPontuacao.push(this.pontuacao);
+    this.pontuacao = 100;
   }
 
-  private ObterNumeroSecreto() {
-    const numeroAleatorio: number = Math.random() * 100;
+  private ObterNumeroSecreto(max: number) {
+    const numeroAleatorio: number = Math.random() * (max - 1) + 1;
     const numeroSecreto = Math.floor(numeroAleatorio);
 
     console.log(numeroSecreto);
