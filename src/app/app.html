@@ -3,35 +3,41 @@
 
   <div class="d-flex flex-wrap gap-2 mb-3">
     <span class="badge text-bg-warning px-3 py-2 fs-4">
-      Chances: <strong>{{chances}}</strong>
+      Chances: <strong>{{ chances }}</strong>
     </span>
     <span class="badge text-bg-info px-3 py-2 fs-4">
-      Placar: <strong>{{placar}}</strong>
+      Placar: <strong>{{ placar }}</strong>
     </span>
   </div>
 
   @if (venceu) {
-    <div class="alert alert-success w-100 text-center" style="max-width: 640px;" role="alert">
+    <div class="alert alert-success w-100 text-center" style="max-width: 640px" role="alert">
       <strong>Você acertou!</strong> 🎉
-    </div>}
-  @else if (perdeu) {
-    <div class="alert alert-danger w-100 text-center" style="max-width: 640px;" role="alert">
+    </div>
+  } @else if (perdeu) {
+    <div class="alert alert-danger w-100 text-center" style="max-width: 640px" role="alert">
       <strong>Você perdeu…</strong> Tente novamente!
-    </div>}
+    </div>
+  }
 
   <main class="row-cols-3 d-flex align-items-center bg-warning-subtle rounded text-center p-5 mt-2">
-    <label class="display-1"> {{dicaNumeroMaiorQue}}> </label>
+    <label class="display-1"> {{ dicaNumeroMaiorQue }}> </label>
 
     <div class="d-flex flex-column gap-2">
-      <input [(ngModel)]="numeroDigitado" class="display-1 text-center" type="number" min="1" max="100">
-      @if(!jogoEstaFinalizad){
+      <input
+        [(ngModel)]="numeroDigitado"
+        class="display-1 text-center"
+        type="number"
+        min="1"
+        max="100"
+      />
+      @if (!jogoEstaFinalizad) {
         <button (click)="adivinhar()" class="btn btn-primary">Adivinhar</button>
-      }
-      @else{
-        <button (click)="reiniciar()"class="btn btn-success">Reiniciar</button>
+      } @else {
+        <button (click)="reiniciar()" class="btn btn-success">Reiniciar</button>
       }
     </div>
 
-    <label class="display-1"> <{{dicaNumeroMenorQue}} </label>
+    <label class="display-1"> <{{ dicaNumeroMenorQue }} </label>
   </main>
 </div>
