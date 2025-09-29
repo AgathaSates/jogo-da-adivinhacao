@@ -15,7 +15,7 @@ export class App implements OnInit{
 
   public jogoEstaFinalizad: boolean = false;
   public venceu: boolean = false;
-  public perdeu: Boolean = false;
+  public perdeu: boolean = false;
   public placar: number = 0;
   public chances: number = 4;
 
